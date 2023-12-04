@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "../services/axios";
 import { CanceledError } from "axios";
 
-interface Document {
+export interface Document {
     id: number;
     name: string;
+    description: string;
 }
   
 interface FecthDocumentsResponse {
