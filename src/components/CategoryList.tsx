@@ -1,20 +1,19 @@
 import { Text } from "@chakra-ui/react";
-import useCategories from "../hooks/useCategories";
+import useCategories, { Category } from "../hooks/useCategories";
 
-const CategoryGrid = () => {
-  const { categories, isLoading, error } = useCategories();
+const CategoryList = () => {
+  const { data, isLoading, error } = useCategories();
 
   return (
     <>
       {isLoading && <Text>{isLoading}</Text>}
       {error && <Text>{error}</Text>}
-      <h2>Категории</h2>
       <ul>
-        {categories?.map((category) => (
+        {data?.map((category) => (
           <li key={category.id}>{category.name}</li>
         ))}
       </ul>
     </>
   );
 };
-export default CategoryGrid;
+export default CategoryList;

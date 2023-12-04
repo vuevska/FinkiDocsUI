@@ -21,7 +21,7 @@ import {
 } from "react-icons/md";
 
 const DocumentsGrid = () => {
-  const { documents, isLoading, error } = useDocuments();
+  const { data, isLoading, error } = useDocuments();
 
   return (
     <>
@@ -41,7 +41,7 @@ const DocumentsGrid = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {documents?.map((document) => (
+            {data?.map((document) => (
               <Tr key={document.id}>
                 <Td>
                   <DocumentCard

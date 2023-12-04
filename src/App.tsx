@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
-import CategoryGrid from "./components/CategoryGrid";
+import CategoryList from "./components/CategoryList";
 import DocumentsGrid from "./components/DocumentsGrid";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
       </GridItem>
       <Show above="lg">
         <GridItem area="aside">
-          <CategoryGrid />
+          <CategoryList />
         </GridItem>
       </Show>
 
