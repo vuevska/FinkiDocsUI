@@ -1,35 +1,8 @@
-import { useEffect, useState } from "react";
-import axios from "../services/axios";
-import { CanceledError } from "axios";
 import { Text } from "@chakra-ui/react";
-
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-}
-
-interface FetchCategoriessResponse {
-  count: number;
-  results: Category[];
-}
+import useCategories from "../hooks/useCategories";
 
 const CategoryGrid = () => {
-  const [categories, setCategories] = useState<Category[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      await axios
-        .get<Category[]>("/categories")
-        .then((response) => setCategories(response.data))
-        .catch((error) => setError(error.message))
-        .finally(() => setIsLoading(false));
-    };
-
-    fetchDocuments();
-  }, []);
+  const { categories, isLoading, error } = useCategories();
 
   return (
     <>

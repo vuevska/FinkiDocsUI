@@ -1,33 +1,8 @@
-import { useState, useEffect } from "react";
-import axios from "../services/axios";
 import { Text } from "@chakra-ui/react";
-
-interface Document {
-  id: number;
-  name: string;
-}
-
-interface FecthDocumentsResponse {
-  count: number;
-  results: Document[];
-}
+import useDocuments from "../hooks/useDocuments";
 
 const DocumentsGrid = () => {
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      await axios
-        .get<Document[]>("/documents")
-        .then((response) => setDocuments(response.data))
-        .catch((error) => setError(error.message))
-        .finally(() => setIsLoading(false));
-    };
-
-    fetchDocuments();
-  }, []);
+  const { documents, isLoading, error } = useDocuments();
 
   return (
     <>
