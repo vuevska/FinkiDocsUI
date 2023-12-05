@@ -11,6 +11,7 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   MdPreview,
@@ -23,9 +24,9 @@ import {
 const DocumentsGrid = () => {
   const { data, isLoading, error } = useDocuments();
 
+  if (isLoading) return <Spinner />;
   return (
     <>
-      {isLoading && <Text>{isLoading}</Text>}
       {error && <Text>{error}</Text>}
 
       <TableContainer padding={10}>
