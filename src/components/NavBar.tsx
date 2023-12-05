@@ -1,17 +1,22 @@
-import { HStack, Image, Text } from "@chakra-ui/react";
+import { Box, HStack, Image, Text } from "@chakra-ui/react";
 import logo from "../assets/logo-finki.png";
 import ColorModeSwitch from "./ColorModeSwitch";
+import SearchInput from "./SearchInput";
 
 const NavBar = () => {
   return (
     <HStack justifyContent="space-between" padding={10}>
       <HStack>
-        <Image src={logo} boxSize={40} />
-        <Text>
+        <Image src={logo} boxSize={{ base: 39, md: 40, lg: 40 }} />
+
+        <Text fontWeight="bold" fontSize={{ base: 15, md: 20, lg: 25 }}>
           Финки <br /> Документи
         </Text>
       </HStack>
-      <ColorModeSwitch />
+      <HStack>
+        <SearchInput />
+        <ColorModeSwitch />
+      </HStack>
     </HStack>
   );
 };
