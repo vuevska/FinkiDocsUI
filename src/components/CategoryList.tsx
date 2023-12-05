@@ -1,7 +1,19 @@
-import { List, ListItem, Text, Box, Divider, Spinner } from "@chakra-ui/react";
-import useCategories from "../hooks/useCategories";
+import {
+  List,
+  ListItem,
+  Text,
+  Box,
+  Divider,
+  Spinner,
+  Button,
+} from "@chakra-ui/react";
+import useCategories, { Category } from "../hooks/useCategories";
 
-const CategoryList = () => {
+interface Props {
+  onSelectCategory: (category: Category) => void;
+}
+
+const CategoryList = ({ onSelectCategory }: Props) => {
   const { data, isLoading, error } = useCategories();
 
   if (isLoading) return <Spinner />;
@@ -17,7 +29,9 @@ const CategoryList = () => {
         <List spacing={3} paddingY={5}>
           {data?.map((category) => (
             <ListItem fontSize="lg" key={category.id}>
-              {category.name}
+              <Button variant="link" onClick={() => onSelectCategory(category)}>
+                {category.name}
+              </Button>
             </ListItem>
           ))}
         </List>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "../services/axios";
-import { CanceledError } from "axios";
+import { AxiosRequestConfig, CanceledError } from "axios";
 
 
-const useData = <T>(endpoint: string) => {
+const useData = <T>(endpoint: string, requestConfig?: AxiosRequestConfig, dependencies?: any[]) => {
     const [data, setData] = useState<T[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -13,7 +13,7 @@ const useData = <T>(endpoint: string) => {
       const fetchData = async () => {
 
         await axios
-          .get<T[]>(endpoint, {signal: controller.signal})
+          .get<T[]>(endpoint, { signal: controller.signal, ...requestConfig })
           .then((response) => setData(response.data))
           .catch((error) => {
             if (error instanceof CanceledError) return;
@@ -23,7 +23,7 @@ const useData = <T>(endpoint: string) => {
   
       fetchData();
       return () => controller.abort();
-    }, []);
+    }, dependencies ? [...dependencies] : []);
 
     return { data, isLoading, error };
 }
