@@ -1,3 +1,4 @@
+import { DocumentQuery } from "../App";
 import { Category } from "./useCategories";
 import useData from "./useData";
 
@@ -7,12 +8,17 @@ export interface Document {
     description: string;
 }
 
-const useDocuments = (categoryId: Category | null) => {
-    const url = categoryId ? `/documents/${categoryId.id}` : "/documents";
-    return useData<Document[]>(
+const useDocuments = (documentQuery : DocumentQuery) => {
+    const url = documentQuery.category?.id ? `/documents/${documentQuery.category?.id}` : "/documents";
+    return useData<Document>(
         url,
-        {},
-        [categoryId?.id]
+        {
+            params: {
+//                category: documentQuery.category?.id,
+                searchText: documentQuery.searchText
+            }
+        },
+        [documentQuery]
     );
   };
 

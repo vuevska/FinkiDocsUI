@@ -20,14 +20,14 @@ import {
   MdOutlineStarBorder,
   MdDelete,
 } from "react-icons/md";
-import { Category } from "../hooks/useCategories";
+import { DocumentQuery } from "../App";
 
 interface Props {
-  selectedCategory: Category | null;
+  documentQuery: DocumentQuery;
 }
 
-const DocumentsTable = ({ selectedCategory }: Props) => {
-  const { data, isLoading, error } = useDocuments(selectedCategory);
+const DocumentsTable = ({ documentQuery }: Props) => {
+  const { data, isLoading, error } = useDocuments(documentQuery);
 
   if (isLoading) return <Spinner />;
   return (
@@ -36,7 +36,7 @@ const DocumentsTable = ({ selectedCategory }: Props) => {
 
       <TableContainer padding={10}>
         <Table variant="striped" colorScheme="blue">
-          <TableCaption>Документи според категорија</TableCaption>
+          {/* <TableCaption>Документи според категорија</TableCaption> */}
           <Thead>
             <Tr>
               <Th>Име на документ</Th>
@@ -83,7 +83,7 @@ const DocumentsTable = ({ selectedCategory }: Props) => {
               </Tr>
             ))}
           </Tbody>
-          <Tfoot>
+          {/* <Tfoot>
             <Tr>
               <Th>Име на документ</Th>
               <Th>Опис</Th>
@@ -91,7 +91,7 @@ const DocumentsTable = ({ selectedCategory }: Props) => {
                 Акции
               </Th>
             </Tr>
-          </Tfoot>
+          </Tfoot> */}
         </Table>
       </TableContainer>
     </>

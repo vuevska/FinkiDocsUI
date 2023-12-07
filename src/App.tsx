@@ -1,40 +1,62 @@
-import { Button, ButtonGroup, Grid, GridItem, Show } from "@chakra-ui/react";
+import { Grid, GridItem, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import CategoryList from "./components/CategoryList";
 import DocumentsTable from "./components/DocumentsTable";
 import { useState } from "react";
 import { Category } from "./hooks/useCategories";
 
+export interface DocumentQuery {
+  category: Category | null;
+  searchText: string;
+}
+
 function App() {
-  // it is initially null, meaning no category is selected
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
+  const [documentQuery, setDocumentQuery] = useState<DocumentQuery>(
+    {} as DocumentQuery
   );
+
   return (
     <Grid
       templateAreas={{
-        base: `"nav" "main"`,
-        lg: `"nav nav nav" "aside main main"`,
+        base: `"nav" "main" "footer"`,
+        lg: `"nav nav nav" "aside main main" "footer footer footer"`,
       }}
       templateColumns={{
         base: "1fr",
-        lg: "350px 1fr",
+        lg: "300px 1fr",
       }}
     >
-      <GridItem area="nav">
-        <NavBar></NavBar>
+      <GridItem area="nav" marginTop={3}>
+        <NavBar
+          onSearch={(searchText) =>
+            setDocumentQuery({ ...documentQuery, searchText })
+          }
+        ></NavBar>
       </GridItem>
       <Show above="lg">
-        <GridItem area="aside" paddingX={5}>
+        <GridItem
+          area="aside"
+          margin={5}
+          padding={10}
+          border={1}
+          borderRadius={10}
+          borderColor="black.300"
+        >
           <CategoryList
-            selectedCategory={selectedCategory}
-            onSelectCategory={(category) => setSelectedCategory(category)}
+            selectedCategory={documentQuery.category}
+            onSelectCategory={(category) =>
+              setDocumentQuery({ ...documentQuery, category })
+            }
           />
         </GridItem>
       </Show>
 
-      <GridItem area="main">
-        <DocumentsTable selectedCategory={selectedCategory} />
+      <GridItem area="main" margin={5} borderRadius={10}>
+        <DocumentsTable documentQuery={documentQuery} />
+      </GridItem>
+
+      <GridItem area="footer" textAlign="center">
+        Footer
       </GridItem>
     </Grid>
   );

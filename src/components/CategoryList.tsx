@@ -6,6 +6,9 @@ import {
   Divider,
   Spinner,
   Button,
+  VStack,
+  StackDivider,
+  useColorMode,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
 
@@ -22,7 +25,7 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
 
   return (
     <>
-      <Box padding="10">
+      <VStack>
         <Text px="4" fontSize={20} textAlign="center">
           Категории
         </Text>
@@ -42,7 +45,7 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
             </ListItem>
           ))}
         </List>
-      </Box>
+      </VStack>
     </>
   );
 };
