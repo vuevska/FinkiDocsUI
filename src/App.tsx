@@ -1,10 +1,23 @@
-import { Grid, GridItem, Show } from "@chakra-ui/react";
+import {
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerOverlay,
+  Grid,
+  GridItem,
+  HStack,
+  Icon,
+  Show,
+  useDisclosure,
+} from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import CategoryList from "./components/CategoryList";
 import DocumentsTable from "./components/DocumentsTable";
 import { useState } from "react";
 import { Category } from "./hooks/useCategories";
 import DocumentHeading from "./components/DocumentHeading";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 export interface DocumentQuery {
   category: Category | null;
@@ -15,12 +28,15 @@ function App() {
   const [documentQuery, setDocumentQuery] = useState<DocumentQuery>(
     {} as DocumentQuery
   );
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Grid
       templateAreas={{
         base: `"nav" "main" "footer"`,
-        lg: `"nav nav nav" "aside main main" "footer footer footer"`,
+        lg: `"nav nav nav"
+             "aside main main"
+             "footer footer footer"`,
       }}
       templateColumns={{
         base: "1fr",
@@ -28,11 +44,30 @@ function App() {
       }}
     >
       <GridItem area="nav" marginTop={3}>
-        <NavBar
-          onSearch={(searchText) =>
-            setDocumentQuery({ ...documentQuery, searchText })
-          }
-        ></NavBar>
+        <HStack>
+          <Show below="lg">
+            <Icon as={HamburgerIcon} onClick={onOpen} marginLeft={5} />
+            <Drawer placement={"left"} onClose={onClose} isOpen={isOpen}>
+              <DrawerOverlay />
+              <DrawerContent>
+                <DrawerBody paddingTop={5}>
+                  <CategoryList
+                    selectedCategory={documentQuery.category}
+                    onSelectCategory={(category) =>
+                      setDocumentQuery({ ...documentQuery, category })
+                    }
+                  ></CategoryList>
+                </DrawerBody>
+              </DrawerContent>
+            </Drawer>
+          </Show>
+
+          <NavBar
+            onSearch={(searchText) =>
+              setDocumentQuery({ ...documentQuery, searchText })
+            }
+          ></NavBar>
+        </HStack>
       </GridItem>
       <Show above="lg">
         <GridItem

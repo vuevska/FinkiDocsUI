@@ -2,7 +2,6 @@ import {
   List,
   ListItem,
   Text,
-  Box,
   Divider,
   Spinner,
   Button,
@@ -34,6 +33,8 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
           {data?.map((category) => (
             <ListItem fontSize="lg" key={category.id}>
               <Button
+                whiteSpace="normal"
+                textAlign="left"
                 variant="link"
                 onClick={() => onSelectCategory(category)}
                 fontWeight={
