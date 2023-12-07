@@ -34,7 +34,7 @@ const DocumentsTable = ({ documentQuery }: Props) => {
     <>
       {error && <Text>{error}</Text>}
 
-      <TableContainer padding={10}>
+      <TableContainer padding={10} marginTop={-5}>
         <Table variant="striped" colorScheme="blue">
           {/* <TableCaption>Документи според категорија</TableCaption> */}
           <Thead>

@@ -4,6 +4,7 @@ import CategoryList from "./components/CategoryList";
 import DocumentsTable from "./components/DocumentsTable";
 import { useState } from "react";
 import { Category } from "./hooks/useCategories";
+import DocumentHeading from "./components/DocumentHeading";
 
 export interface DocumentQuery {
   category: Category | null;
@@ -52,6 +53,7 @@ function App() {
       </Show>
 
       <GridItem area="main" margin={5} borderRadius={10}>
+        <DocumentHeading documentQuery={documentQuery}></DocumentHeading>
         <DocumentsTable documentQuery={documentQuery} />
       </GridItem>
 
