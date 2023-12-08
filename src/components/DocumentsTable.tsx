@@ -1,6 +1,7 @@
 import { SimpleGrid, Text } from "@chakra-ui/react";
 import useDocuments from "../hooks/useDocuments";
 import DocumentCard from "./DocumentCard";
+import ActionButton from "./ActionButton";
 import {
   Table,
   Thead,
@@ -66,19 +67,19 @@ const DocumentsTable = ({ documentQuery }: Props) => {
                 </Td>
                 <Td>{document.description}</Td>
                 <Td padding={0}>
-                  <MdPreview fontSize={20} />
+                  <ActionButton documentId={document.id} size={"md"} padding={0} action={"view"}/>
                 </Td>
                 <Td padding={0}>
-                  <MdEdit fontSize={20} />
+                  <ActionButton documentId={document.id} size={"md"} padding={0} action={"edit"}/>
                 </Td>
                 <Td padding={0}>
-                  <MdOutlineDownloadForOffline fontSize={20} />
+                  <ActionButton documentId={document.id} size={"md"} padding={0} action={"download"}/>
                 </Td>
                 <Td padding={0}>
-                  <MdOutlineStarBorder fontSize={20} />
+                  <ActionButton documentId={document.id} isFavourite={true} size={"md"} padding={0} action={"favourite"}/>
                 </Td>
                 <Td padding={0}>
-                  <MdDelete fontSize={20} />
+                  <ActionButton documentId={document.id} size={"md"} padding={0} action={"delete"}/>
                 </Td>
               </Tr>
             ))}
