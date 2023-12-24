@@ -22,6 +22,7 @@ import {
   MdDelete,
 } from "react-icons/md";
 import { DocumentQuery } from "../App";
+import {useState} from "react";
 
 interface Props {
   documentQuery: DocumentQuery;
@@ -31,6 +32,7 @@ const DocumentsTable = ({ documentQuery }: Props) => {
   const { data, isLoading, error } = useDocuments(documentQuery);
 
   if (isLoading) return <Spinner />;
+
   return (
     <>
       {error && <Text>{error}</Text>}
@@ -76,7 +78,7 @@ const DocumentsTable = ({ documentQuery }: Props) => {
                   <ActionButton documentId={document.id} size={"md"} padding={0} action={"download"}/>
                 </Td>
                 <Td padding={0}>
-                  <ActionButton documentId={document.id} isFavourite={true} size={"md"} padding={0} action={"favourite"}/>
+                  <ActionButton documentId={document.id} size={"md"} padding={0} action={"favourite"}/>
                 </Td>
                 <Td padding={0}>
                   <ActionButton documentId={document.id} size={"md"} padding={0} action={"delete"}/>
@@ -93,10 +95,12 @@ const DocumentsTable = ({ documentQuery }: Props) => {
               </Th>
             </Tr>
           </Tfoot> */}
+
         </Table>
       </TableContainer>
     </>
-  );
+
+);
 };
 
 export default DocumentsTable;
