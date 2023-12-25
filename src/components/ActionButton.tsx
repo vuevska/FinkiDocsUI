@@ -66,18 +66,40 @@ const ActionButton = ({action, size, padding, documentId, isFavourite}: Props) =
 
     // Okay, this needs to edit the document and change the value of the column of is_favourite to 1 (true)
     // By default it will be 0 (false)
-    const favouriteDocument = (documentId: number, isFavourite: boolean | undefined) => {
-        const isFav = isFavourite !== undefined ? isFavourite : true;
 
-        axios.put(`http://localhost:8080/api/documents/view/${documentId}`, {is_favourite: isFav})
-            .then(response => {
-                alert('Document added as favourite.');
-                window.location.reload();
-            })
-            .catch(error => {
-                alert("Error adding document: " + error);
-            })
+     interface Favourite {
+        id: number;
+        name: string;
+        description: string;
+        categoryId: number;
     }
+    const favouriteDocument = async (documentId: number) => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/favourites');
+            const favouritesList: Favourite[] = response.data;
+            // if (favouritesList.length > 0) {
+            //     console.log(favouritesList[0].id);
+            // }
+            let found=false;
+            for (let i=0; i<favouritesList.length; i++){
+                if (favouritesList[i].id===documentId){
+                    found=true;
+                    await axios.delete(`http://localhost:8080/api/favourites/remove/${documentId}`);
+                    alert('Document removed from favourite.');
+                    break;
+                }
+            }
+            if (!found){
+                await axios.post(`http://localhost:8080/api/favourites/add/${documentId}`);
+                alert('Document added as favourite.');
+            }
+            window.location.reload(); // Reload the page or perform necessary actions
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error adding document as favourite.');
+        }
+    };
+
 
     // This is really tricky and I have no idea what to do.
     // I'm just winging it and hoping that I won't have to change a shit ton of logic here.
@@ -122,7 +144,7 @@ const ActionButton = ({action, size, padding, documentId, isFavourite}: Props) =
             viewDocument(documentId);
         } else if (action === 'favourite') {
             console.log("Favourite action");
-            favouriteDocument(documentId, isFavourite);
+            favouriteDocument(documentId);
         }else if (action === 'download') {
             console.log("Download action");
             downloadDocument(documentId);
