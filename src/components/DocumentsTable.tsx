@@ -76,7 +76,7 @@ const DocumentsTable = ({ documentQuery }: Props) => {
                   <ActionButton documentId={document.id} size={"md"} padding={0} action={"download"}/>
                 </Td>
                 <Td padding={0}>
-                  <ActionButton documentId={document.id} isFavourite={true} size={"md"} padding={0} action={"favourite"}/>
+                  <ActionButton documentId={document.id} size={"md"} padding={0} action={"favourite"}/>
                 </Td>
                 <Td padding={0}>
                   <ActionButton documentId={document.id} size={"md"} padding={0} action={"delete"}/>
