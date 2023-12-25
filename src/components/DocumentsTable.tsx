@@ -1,7 +1,10 @@
-import { SimpleGrid, Text } from "@chakra-ui/react";
+import {SimpleGrid, Text } from "@chakra-ui/react";
 import useDocuments from "../hooks/useDocuments";
 import DocumentCard from "./DocumentCard";
 import ActionButton from "./ActionButton";
+import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as ChakraLink, LinkProps } from '@chakra-ui/react';
+
 import {
   Table,
   Thead,
@@ -23,6 +26,9 @@ import {
 } from "react-icons/md";
 import { DocumentQuery } from "../App";
 import {useState} from "react";
+import Favourites from "./Favourites";
+import { Link } from '@chakra-ui/react'
+
 
 interface Props {
   documentQuery: DocumentQuery;
@@ -96,8 +102,17 @@ const DocumentsTable = ({ documentQuery }: Props) => {
             </Tr>
           </Tfoot> */}
 
+
+          {/*<a href={'/favourites'} >Favourites</a>*/}
+          {/*<BrowserRouter>*/}
+            {/*<Favourites />*/}
+            {/*<Link to={'/favourites'} target="_blank" rel="noopener noreferrer">Favourites</Link>*/}
+          {/*</BrowserRouter>*/}
+          {/*<Link to={"/favourites"} target="_blank" rel="noopener noreferrer"></Link>*/}
+          {/*<Link to="/favourites">Go to fave</Link>*/}
         </Table>
       </TableContainer>
+
     </>
 
 );
