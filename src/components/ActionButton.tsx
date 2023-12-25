@@ -79,17 +79,6 @@ const ActionButton = ({action, size, padding, documentId}: Props) => {
     // Okay, this needs to edit the document and change the value of the column of is_favourite to 1 (true)
     // By default it will be 0 (false)
 
-    const favouriteDocument = (documentId: number) => {
-        axiosInstance.put(`/documents/favourites/add/${documentId}`)
-            .then(response => {
-                alert('Document added as favourite.');
-                window.location.reload();
-            })
-            .catch(error => {
-                alert("Error adding document: " + error);
-            })
-
-
      interface Favourite {
         id: number;
         name: string;
@@ -99,7 +88,7 @@ const ActionButton = ({action, size, padding, documentId}: Props) => {
     }
     const favouriteDocument = async (documentId: number) => {
         try {
-            const response = await axios.get('http://localhost:8080/api/favourites');
+            const response = await axiosInstance.get('/favourites');
             const favouritesList: Favourite[] = response.data;
             // if (favouritesList.length > 0) {
             //     console.log(favouritesList[0].id);
@@ -108,13 +97,13 @@ const ActionButton = ({action, size, padding, documentId}: Props) => {
             for (let i=0; i<favouritesList.length; i++){
                 if (favouritesList[i].id===documentId){
                     found=true;
-                    await axios.delete(`http://localhost:8080/api/favourites/remove/${documentId}`);
+                    await axiosInstance.delete(`/favourites/remove/${documentId}`);
                     alert('Document removed from favourite.');
                     break;
                 }
             }
             if (!found){
-                await axios.post(`http://localhost:8080/api/favourites/add/${documentId}`);
+                await axiosInstance.post(`/favourites/add/${documentId}`);
                 alert('Document added as favourite.');
             }
             window.location.reload(); // Reload the page or perform necessary actions
