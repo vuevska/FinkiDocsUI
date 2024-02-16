@@ -2,7 +2,7 @@ import {Button, SimpleGrid, Text} from "@chakra-ui/react";
 import useDocuments from "../hooks/useDocuments";
 import DocumentCard from "./DocumentCard";
 import ActionButton from "./ActionButton";
-import {BrowserRouter , Link as ReactRouterLink , Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Link as ReactRouterLink, Route, Routes} from 'react-router-dom';
 import {Link as ChakraLink, LinkProps} from '@chakra-ui/react';
 
 
@@ -30,6 +30,7 @@ import React, {useState} from "react";
 import Favourites from "./Favourites";
 import {Link} from '@chakra-ui/react'
 import {ExternalLinkIcon} from "@chakra-ui/icons";
+import Document from "./Document";
 
 
 interface Props {
@@ -127,22 +128,25 @@ const DocumentsTable = ({documentQuery}: Props) => {
             {/*</Button>*/}
 
 
-            <BrowserRouter>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path='/' element={
 
-                <Routes>
-                    <Route  path='/' element={
-
-                            <ChakraLink  as={ReactRouterLink} to='/favourites'
-                                  target='_blank'>
+                            <ChakraLink as={ReactRouterLink} to='/favourites'
+                                        target='_blank'>
                                 Омилени
                             </ChakraLink>
-                    }>
-                    </Route>
-                    <Route  path='/favourites'
-                           element={<Favourites/>}>
-                    </Route>
-                </Routes>
-            </BrowserRouter>
+                        }>
+                        </Route>
+
+                        <Route path='/favourites'
+                               element={<Favourites/>}>
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+
+
+
 
         </>
 
