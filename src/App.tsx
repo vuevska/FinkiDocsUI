@@ -15,13 +15,15 @@ import {
 import NavBar from "./components/NavBar";
 import CategoryList from "./components/CategoryList";
 import DocumentsTable from "./components/DocumentsTable";
-import {lazy, useState} from "react";
+import React, {lazy, useState} from "react";
 import {Category} from "./hooks/useCategories";
 import DocumentHeading from "./components/DocumentHeading";
 import {HamburgerIcon} from "@chakra-ui/icons";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+
 const Favourites = lazy(() => import('./components/Favourites'));
 // import Favourites from "./components/Favourites";
+import {Button, ButtonGroup} from '@chakra-ui/react'
 
 export interface DocumentQuery {
     category: Category | null;
@@ -33,6 +35,7 @@ function App() {
         {} as DocumentQuery
     );
     const {isOpen, onOpen, onClose} = useDisclosure();
+
 
 
     return (
@@ -95,16 +98,15 @@ function App() {
             <GridItem area="main" margin={5} borderRadius={10}>
                 <DocumentHeading documentQuery={documentQuery}></DocumentHeading>
                 <DocumentsTable documentQuery={documentQuery}/>
-                <Router>
+                {/*<Router>*/}
 
-                    <Routes>
-                      <Route path="/"  Component={Favourites}/>
-                      <Route path="/favourites" Component={Favourites}/>
-                      {/*<Route path="/categories" Component={CategoryList}/>*/}
+                    {/*<Routes>*/}
+                        {/*<Route path="/" Component={Favourites}/>*/}
+                        {/*<Route path="/favourites" Component={Favourites}/>*/}
+                        {/*<Route path="/categories" Component={CategoryList}/>*/}
 
-                    </Routes>
-                </Router>
-
+                    {/*</Routes>*/}
+                {/*</Router>*/}
             </GridItem>
 
             <GridItem area="footer" textAlign="center">
