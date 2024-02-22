@@ -16,6 +16,12 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "src/layout/NavBar.tsx",
+    "src/layout/CategoryList.tsx",
+    "src/layout/DocumentsTable.tsx",
+    "src/layout/Footer.tsx"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
