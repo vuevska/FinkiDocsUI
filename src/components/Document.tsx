@@ -12,16 +12,15 @@ import {
     Switch,
     useDisclosure,
 } from "@chakra-ui/react";
-import NavBar from "./NavBar";
-import CategoryList from "./CategoryList";
-import DocumentsTable from "./DocumentsTable";
+import NavBar from "../layout/NavBar";
+import CategoryList from "../layout/CategoryList";
 import React, {lazy, useState} from "react";
 import {Category} from "../hooks/useCategories";
-import DocumentHeading from "./DocumentHeading";
+// import DocumentHeading from "./DocumentHeading";
 import {HamburgerIcon} from "@chakra-ui/icons";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
-const Favourites = lazy(() => import('./Favourites'));
+// const Favourites = lazy(() => import('./Favourites'));
 // import Favourites from "./components/Favourites";
 import {Button, ButtonGroup} from '@chakra-ui/react'
 
@@ -96,8 +95,8 @@ function Document() {
             </Show>
 
             <GridItem area="main" margin={5} borderRadius={10}>
-                <DocumentHeading documentQuery={documentQuery}></DocumentHeading>
-                <DocumentsTable documentQuery={documentQuery}/>
+                {/*<DocumentHeading documentQuery={documentQuery}></DocumentHeading>*/}
+                {/*<DocumentsTable documentQuery={documentQuery}/>*/}
                 {/*<Router>*/}
 
                 {/*<Routes>*/}

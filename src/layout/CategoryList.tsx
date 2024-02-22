@@ -6,8 +6,6 @@ import {
   Spinner,
   Button,
   VStack,
-  StackDivider,
-  useColorMode,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
 
