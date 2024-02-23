@@ -8,7 +8,6 @@ import {
   HStack,
   Icon,
   Show,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import NavBar from "./layout/NavBar";
@@ -18,6 +17,8 @@ import { Category } from "./hooks/useCategories";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import DocumentList from "./layout/DocumentList";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export interface DocumentQuery {
   category: Category | null;

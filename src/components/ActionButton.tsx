@@ -1,17 +1,27 @@
-import React from "react";
-import { IconButton } from "@chakra-ui/react";
+import React, { useState } from "react";
+import {
+  Button,
+  IconButton,
+  Modal,
+  ModalCloseButton,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+} from "@chakra-ui/react";
 import {
   AiOutlineDelete,
   AiOutlineDownload,
   AiOutlineEdit,
   AiOutlineEye,
-  AiOutlineFolderView,
   AiOutlineStar,
 } from "react-icons/ai";
 
 import axiosInstance from "../services/axios";
 
 import { act } from "react-dom/test-utils"; // Import icons for delete and edit actions
+import { ToastContainer, toast } from "react-toastify";
 
 //@Author Bojan, ask for help if needed.
 interface Props {
@@ -22,17 +32,33 @@ interface Props {
 }
 
 const ActionButton = ({ action, size, padding, documentId }: Props) => {
+  // Za brisanje dokumenti
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleDelete = () => {
+    setIsModalOpen(true);
+  };
+
   // There is a backend part for this BUT feel free to make it better, it does not use DTO right now!
   const deleteDocument = (documentId: number) => {
     axiosInstance
       .delete(`/documents/delete/${documentId}`)
       .then((response) => {
-        alert("Document deleted successfully.");
+        toast.success("Document deleted successfully.");
+        // treba da se smeni logikata so window reload.
         window.location.reload();
       })
       .catch((error) => {
-        alert("Error deleting document: " + error);
+        toast.error("Error deleting document: " + error);
       });
+  };
+
+  const confirmDelete = () => {
+    deleteDocument(documentId);
+    setIsModalOpen(false);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
   //console.log() is here just for testing, may remove when 100% works
 
@@ -48,7 +74,7 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
         console.log("Document details: ", response.data);
       })
       .catch((error) => {
-        alert("Error viewing document: " + error);
+        toast.error("Error viewing document: " + error);
       });
   };
 
@@ -69,7 +95,7 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
       })
       .catch((error) => {
         console.error("Error viewing document:", error);
-        alert("Error viewing document: " + error);
+        toast.error("Error viewing document: " + error);
       });
   };
 
@@ -97,18 +123,18 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
         if (favouritesList[i].id === documentId) {
           found = true;
           await axiosInstance.delete(`/favourites/remove/${documentId}`);
-          alert("Document removed from favourite.");
+          toast.warn("Document removed from favourites.");
           break;
         }
       }
       if (!found) {
         await axiosInstance.post(`/favourites/add/${documentId}`);
-        alert("Document added as favourite.");
+        toast.success("Document added to favourites.");
       }
-      window.location.reload(); // Reload the page or perform necessary actions
+      //window.location.reload(); // Reload the page or perform necessary actions
     } catch (error) {
       console.error("Error:", error);
-      alert("Error adding document as favourite.");
+      toast.error("Error adding document as favourite.");
     }
   };
 
@@ -149,6 +175,7 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
       })
       .catch((error) => {
         console.error("Error downloading file:", error);
+        toast.error("Error downloading file: " + error);
       });
   };
 
@@ -206,14 +233,35 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
   };
 
   return (
-    <IconButton
-      icon={icon}
-      //colorScheme="blue"
-      onClick={handleAction}
-      fontSize={size}
-      padding={padding}
-      aria-label={getAriaLabel(action)}
-    />
+    <>
+      <IconButton
+        icon={getIcon()}
+        onClick={action === "delete" ? handleDelete : () => handleAction()}
+        fontSize={size}
+        padding={padding}
+        aria-label={getAriaLabel(action)}
+      />
+
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Отстрани Документ</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Дали си сигурен дека сакаш да го отстраниш овој документ?
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={confirmDelete}>
+              Отстрани
+            </Button>
+            <Button variant="ghost" onClick={closeModal}>
+              Назад
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
