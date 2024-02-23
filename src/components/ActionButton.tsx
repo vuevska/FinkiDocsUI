@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, IconButton} from "@chakra-ui/react";
 import {
     AiOutlineDelete,
@@ -13,7 +13,7 @@ import axiosInstance from "../services/axios";
 
 import {act} from "react-dom/test-utils";
 import EditModal from "./EditModal";
-import ReactDOM from "react-dom/client"; // Import icons for delete and edit actions
+import ReactDOM from "react-dom/client";
 
 //@Author Bojan, ask for help if needed.
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
 
 }
 
-const ActionButton = ({action, size, padding, documentId, onClick}: Props) => {
+const ActionButton = ({action, size, padding, documentId}: Props) => {
     // There is a backend part for this BUT feel free to make it better, it does not use DTO right now!
     const deleteDocument = (documentId: number) => {
         axiosInstance
@@ -39,6 +39,13 @@ const ActionButton = ({action, size, padding, documentId, onClick}: Props) => {
             });
     };
     //console.log() is here just for testing, may remove when 100% works
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const handleEditButtonClick = () => {
+        setIsEditModalOpen(true);
+    };
+
+
 
     // This needs to take the user to a new screen where we open up the form, so he gets his info filled in
     // The comments in the function are for whoever is making the frontend part, probably Bojan
@@ -164,7 +171,9 @@ const ActionButton = ({action, size, padding, documentId, onClick}: Props) => {
             deleteDocument(documentId);
         } else if (action === "edit") {
             console.log("Edit action");
-            editDocument(documentId);
+            // editDocument(documentId);
+            handleEditButtonClick();
+
         } else if (action === "view") {
             console.log("View action");
             viewDocument(documentId);
@@ -221,8 +230,12 @@ const ActionButton = ({action, size, padding, documentId, onClick}: Props) => {
                 padding={padding}
                 aria-label={getAriaLabel(action)}
             />
-            {action === "edit" && onClick && (
-                <EditModal documentId={documentId} onClick={onClick} onClose={onClick} />
+            {action === "edit" && (
+                <EditModal
+                    documentId={documentId}
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                />
             )}
         </>
     );

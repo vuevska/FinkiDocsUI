@@ -38,6 +38,9 @@ const DocumentList: React.FC<Props> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
 
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,6 +65,11 @@ const DocumentList: React.FC<Props> = ({
   const filteredDocuments = documentQuery.category
     ? documents.filter((doc) => doc.categoryId === documentQuery.category?.id)
     : documents;
+
+  const handleEditButtonClick = () => {
+    setIsEditModalOpen(!isEditModalOpen);
+  };
+
 
   if (isLoading) return <Spinner />;
   if (error) return <Text>{error}</Text>;
@@ -110,7 +118,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"edit"}
                       size={"sm"}
                       padding={0}
-                      onClick={() => setSelectedDocumentId(doc.id)}
+                      onClick={handleEditButtonClick}
                     />
                   </Td>
                   <Td>
@@ -144,9 +152,15 @@ const DocumentList: React.FC<Props> = ({
         </Table>
       </TableContainer>
       {selectedDocumentId !== null && (
-          <EditModal documentId={selectedDocumentId} onClick={() => setSelectedDocumentId(null)} onClose={() => setSelectedDocumentId(null)} />
+          <EditModal
+              documentId={selectedDocumentId}
+              isOpen={isEditModalOpen}
+              onClose={() => {
+                setIsEditModalOpen(false);
+                setSelectedDocumentId(null);
+              }} />
+          )}
 
-      )}
     </>
   );
 };
