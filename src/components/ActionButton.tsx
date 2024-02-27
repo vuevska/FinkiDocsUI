@@ -11,6 +11,7 @@ import {
   ModalBody,
 } from "@chakra-ui/react";
 import {
+  AiFillStar,
   AiOutlineDelete,
   AiOutlineDownload,
   AiOutlineEdit,
@@ -21,7 +22,8 @@ import {
 import axiosInstance from "../services/axios";
 
 import { act } from "react-dom/test-utils"; // Import icons for delete and edit actions
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import { Document } from "../hooks/useDocuments";
 
 //@Author Bojan, ask for help if needed.
 interface Props {
@@ -29,9 +31,16 @@ interface Props {
   documentId: number;
   size: "sm" | "md" | "lg";
   padding: number;
+  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
 }
 
-const ActionButton = ({ action, size, padding, documentId }: Props) => {
+const ActionButton = ({
+  action,
+  size,
+  padding,
+  documentId,
+  setDocuments,
+}: Props) => {
   // Za brisanje dokumenti
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleDelete = () => {
@@ -43,9 +52,10 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
     axiosInstance
       .delete(`/documents/delete/${documentId}`)
       .then((response) => {
+        setDocuments((prevDocuments) =>
+          prevDocuments.filter((doc) => doc.id !== documentId)
+        );
         toast.success("Document deleted successfully.");
-        // treba da se smeni logikata so window reload.
-        window.location.reload();
       })
       .catch((error) => {
         toast.error("Error deleting document: " + error);
@@ -115,14 +125,14 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
     try {
       const response = await axiosInstance.get("/favourites");
       const favouritesList: Favourite[] = response.data;
-      // if (favouritesList.length > 0) {
-      //     console.log(favouritesList[0].id);
-      // }
       let found = false;
       for (let i = 0; i < favouritesList.length; i++) {
         if (favouritesList[i].id === documentId) {
           found = true;
           await axiosInstance.delete(`/favourites/remove/${documentId}`);
+          setDocuments((prevDocuments) =>
+            prevDocuments.filter((doc) => doc.id !== documentId)
+          );
           toast.warn("Document removed from favourites.");
           break;
         }
@@ -131,7 +141,12 @@ const ActionButton = ({ action, size, padding, documentId }: Props) => {
         await axiosInstance.post(`/favourites/add/${documentId}`);
         toast.success("Document added to favourites.");
       }
-      //window.location.reload(); // Reload the page or perform necessary actions
+      setDocuments((prevDocuments) =>
+        prevDocuments.map((doc) => ({
+          ...doc,
+          isFavourite: favouritesList.some((fav) => fav.id === doc.id),
+        }))
+      );
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error adding document as favourite.");

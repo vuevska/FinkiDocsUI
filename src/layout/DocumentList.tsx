@@ -14,13 +14,7 @@ import {
 import axiosInstance from "../services/axios";
 import ActionButton from "../components/ActionButton";
 import { DocumentQuery } from "../App";
-
-interface Document {
-  id: number;
-  name: string;
-  description: string;
-  categoryId: number;
-}
+import { Document } from "../hooks/useDocuments";
 
 interface Props {
   documentQuery: DocumentQuery;
@@ -98,6 +92,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"view"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -106,6 +101,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"edit"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -114,6 +110,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"download"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -122,6 +119,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"favourite"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -130,6 +128,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"delete"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                 </Tr>

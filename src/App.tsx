@@ -17,19 +17,20 @@ import { Category } from "./hooks/useCategories";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import DocumentList from "./layout/DocumentList";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export interface DocumentQuery {
   category: Category | null;
   searchText: string;
+  isFavorites?: boolean;
 }
 
 function App() {
-  const [documentQuery, setDocumentQuery] = useState<DocumentQuery>(
-    {} as DocumentQuery
-  );
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [documentQuery, setDocumentQuery] = useState<DocumentQuery>({
+    category: null,
+    searchText: "",
+  });
 
   return (
     <Router>
