@@ -11,7 +11,6 @@ import {
   ModalBody,
 } from "@chakra-ui/react";
 import {
-  AiFillStar,
   AiOutlineDelete,
   AiOutlineDownload,
   AiOutlineEdit,
@@ -19,11 +18,12 @@ import {
   AiOutlineStar,
 } from "react-icons/ai";
 
-import axiosInstance from "../services/axios";
-
-import { act } from "react-dom/test-utils"; // Import icons for delete and edit actions
-import { toast } from "react-toastify";
 import { Document } from "../hooks/useDocuments";
+import viewDocument from "../hooks/documents/viewDocument";
+import deleteDocument from "../hooks/documents/deleteDocument";
+import downloadDocument from "../hooks/documents/downloadDocument";
+import favouriteDocument from "../hooks/documents/favouriteDocument";
+import editDocument from "../hooks/documents/editDocument";
 
 //@Author Bojan, ask for help if needed.
 interface Props {
@@ -47,157 +47,19 @@ const ActionButton = ({
     setIsModalOpen(true);
   };
 
-  // There is a backend part for this BUT feel free to make it better, it does not use DTO right now!
-  const deleteDocument = (documentId: number) => {
-    axiosInstance
-      .delete(`/documents/delete/${documentId}`)
-      .then((response) => {
-        setDocuments((prevDocuments) =>
-          prevDocuments.filter((doc) => doc.id !== documentId)
-        );
-        toast.success("Document deleted successfully.");
-      })
-      .catch((error) => {
-        toast.error("Error deleting document: " + error);
-      });
-  };
-
   const confirmDelete = () => {
-    deleteDocument(documentId);
+    deleteDocument(documentId, setDocuments);
     setIsModalOpen(false);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  //console.log() is here just for testing, may remove when 100% works
-
-  // This needs to take the user to a new screen where we open up the form, so he gets his info filled in
-  // The comments in the function are for whoever is making the frontend part, probably Bojan
-  // BUT if it's someone else, you have a example of how put works, if still cannot succeed. Ask Bojan!
-  const editDocument = (documentId: number) => {
-    // This takes you to another route, probably the location of where we edit the document
-    // At this location you will need an axios.put so that you can edit the document params
-    axiosInstance
-      .get(`/documents/edit/${documentId}\``)
-      .then((response) => {
-        console.log("Document details: ", response.data);
-      })
-      .catch((error) => {
-        toast.error("Error viewing document: " + error);
-      });
-  };
-
-  // Pretty basic, just needs to open a new window and give the user the specified document info.
-  const viewDocument = (documentId: number) => {
-    axiosInstance
-      .get(`/documents/view/${documentId}`, {
-        responseType: "arraybuffer", // Must be specified that it's an arraybuffer, no idea.
-      })
-      .then((response) => {
-        const pdfBlob = new Blob([response.data], { type: "application/pdf" });
-
-        // We apparently need to create a BLOB.
-        const pdfUrl = window.URL.createObjectURL(pdfBlob);
-
-        // Opens in a new window.
-        window.open(pdfUrl, "_blank");
-      })
-      .catch((error) => {
-        console.error("Error viewing document:", error);
-        toast.error("Error viewing document: " + error);
-      });
-  };
-
-  // This is made to work if we have is_favourite in the db as a column to documents as
-  // Bojan's proposal in DC on 12.8.2023 at 12:45 (use to find message easily)
-
-  // Okay, this needs to edit the document and change the value of the column of is_favourite to 1 (true)
-  // By default it will be 0 (false)
-
-  interface Favourite {
-    id: number;
-    name: string;
-    description: string;
-    categoryId: number;
-  }
-  const favouriteDocument = async (documentId: number) => {
-    try {
-      const response = await axiosInstance.get("/favourites");
-      const favouritesList: Favourite[] = response.data;
-      let found = false;
-      for (let i = 0; i < favouritesList.length; i++) {
-        if (favouritesList[i].id === documentId) {
-          found = true;
-          await axiosInstance.delete(`/favourites/remove/${documentId}`);
-          setDocuments((prevDocuments) =>
-            prevDocuments.filter((doc) => doc.id !== documentId)
-          );
-          toast.warn("Document removed from favourites.");
-          break;
-        }
-      }
-      if (!found) {
-        await axiosInstance.post(`/favourites/add/${documentId}`);
-        toast.success("Document added to favourites.");
-      }
-      setDocuments((prevDocuments) =>
-        prevDocuments.map((doc) => ({
-          ...doc,
-          isFavourite: favouritesList.some((fav) => fav.id === doc.id),
-        }))
-      );
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Error adding document as favourite.");
-    }
-  };
-
-  // This is really tricky and I have no idea what to do.
-  // I'm just winging it and hoping that I won't have to change a shit ton of logic here.
-  // Once we have the backend for this done, should be really easy to adapt and fix.
-  /* This isn't a priority now because even if it works on the backend, I have never done something like this on the frontend.
-    Focus on the other stuff to work perfectly, then this will be top priority */
-  //TODO: Listen to BOJAN!
-  const downloadDocument = (documentId: number) => {
-    axiosInstance
-      .get(`/documents/download/${documentId}`, {
-        responseType: "blob",
-      })
-      .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-
-        const link = document.createElement("a");
-        link.href = url;
-
-        const contentDisposition = response.headers["content-disposition"];
-        const filename = contentDisposition
-          ? contentDisposition
-              .split(";")[1]
-              .split("=")[1]
-              .trim()
-              .replace(/"/g, "")
-          : "downloadedFile.pdf";
-
-        link.setAttribute("download", filename);
-        document.body.appendChild(link);
-
-        link.click();
-
-        document.body.removeChild(link);
-
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error downloading file:", error);
-        toast.error("Error downloading file: " + error);
-      });
-  };
 
   const handleAction = () => {
     if (action === "delete") {
       console.log("Delete action");
-      deleteDocument(documentId);
+      deleteDocument(documentId, setDocuments);
     } else if (action === "edit") {
       console.log("Edit action");
       editDocument(documentId);
@@ -206,7 +68,7 @@ const ActionButton = ({
       viewDocument(documentId);
     } else if (action === "favourite") {
       console.log("Favourite action");
-      favouriteDocument(documentId);
+      favouriteDocument(documentId, setDocuments);
     } else if (action === "download") {
       console.log("Download action");
       downloadDocument(documentId);
