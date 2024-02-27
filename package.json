@@ -13,6 +13,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@syncfusion/ej2-react-inputs": "^24.2.7",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.2",
     "cors": "^2.8.5",

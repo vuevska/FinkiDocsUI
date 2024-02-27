@@ -3,12 +3,12 @@ import {
   Button,
   IconButton,
   Modal,
+  ModalBody,
   ModalCloseButton,
+  ModalOverlay,
   ModalFooter,
   ModalHeader,
-  ModalOverlay,
   ModalContent,
-  ModalBody,
 } from "@chakra-ui/react";
 import {
   AiOutlineDelete,
@@ -19,11 +19,12 @@ import {
 } from "react-icons/ai";
 
 import { Document } from "../hooks/useDocuments";
+
+import EditModal from "./EditModal";
 import viewDocument from "../hooks/documents/viewDocument";
-import deleteDocument from "../hooks/documents/deleteDocument";
-import downloadDocument from "../hooks/documents/downloadDocument";
 import favouriteDocument from "../hooks/documents/favouriteDocument";
-import editDocument from "../hooks/documents/editDocument";
+import downloadDocument from "../hooks/documents/downloadDocument";
+import deleteDocument from "../hooks/documents/deleteDocument";
 
 //@Author Bojan, ask for help if needed.
 interface Props {
@@ -32,6 +33,7 @@ interface Props {
   size: "sm" | "md" | "lg";
   padding: number;
   setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
+  onClick?: () => void;
 }
 
 const ActionButton = ({
@@ -41,19 +43,16 @@ const ActionButton = ({
   documentId,
   setDocuments,
 }: Props) => {
-  // Za brisanje dokumenti
+  // There is a backend part for this BUT feel free to make it better, it does not use DTO right now!
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleDelete = () => {
     setIsModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    deleteDocument(documentId, setDocuments);
-    setIsModalOpen(false);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const handleEditButtonClick = () => {
+    setIsEditModalOpen(true);
   };
 
   const handleAction = () => {
@@ -62,7 +61,8 @@ const ActionButton = ({
       deleteDocument(documentId, setDocuments);
     } else if (action === "edit") {
       console.log("Edit action");
-      editDocument(documentId);
+      // editDocument(documentId);
+      handleEditButtonClick();
     } else if (action === "view") {
       console.log("View action");
       viewDocument(documentId);
@@ -89,6 +89,15 @@ const ActionButton = ({
     }
     return <> </>;
   };
+
+  const confirmDelete = () => {
+    deleteDocument(documentId, setDocuments);
+    setIsModalOpen(false);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const icon = getIcon();
 
   // Can be changed to use ifs, quick fix by Bojan
@@ -111,13 +120,22 @@ const ActionButton = ({
 
   return (
     <>
-      <IconButton
-        icon={getIcon()}
-        onClick={action === "delete" ? handleDelete : () => handleAction()}
-        fontSize={size}
-        padding={padding}
-        aria-label={getAriaLabel(action)}
-      />
+      <>
+        <IconButton
+          icon={getIcon()}
+          onClick={action === "delete" ? handleDelete : () => handleAction()}
+          fontSize={size}
+          padding={padding}
+          aria-label={getAriaLabel(action)}
+        />
+        {action === "edit" && (
+          <EditModal
+            documentId={documentId}
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+          />
+        )}
+      </>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalOverlay />

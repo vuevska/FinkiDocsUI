@@ -14,11 +14,13 @@ import {
 import axiosInstance from "../services/axios";
 import ActionButton from "../components/ActionButton";
 import { DocumentQuery } from "../App";
+import EditModal from "../components/EditModal";
 import { Document } from "../hooks/useDocuments";
 
 interface Props {
   documentQuery: DocumentQuery;
   isFavorites?: boolean;
+  onClick?: () => void;
 }
 
 const DocumentList: React.FC<Props> = ({
@@ -28,6 +30,11 @@ const DocumentList: React.FC<Props> = ({
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
+    null
+  );
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +59,10 @@ const DocumentList: React.FC<Props> = ({
   const filteredDocuments = documentQuery.category
     ? documents.filter((doc) => doc.categoryId === documentQuery.category?.id)
     : documents;
+
+  const handleEditButtonClick = () => {
+    setIsEditModalOpen(!isEditModalOpen);
+  };
 
   if (isLoading) return <Spinner />;
   if (error) return <Text>{error}</Text>;
@@ -101,6 +112,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"edit"}
                       size={"sm"}
                       padding={0}
+                      onClick={handleEditButtonClick}
                       setDocuments={setDocuments}
                     />
                   </Td>
@@ -137,6 +149,16 @@ const DocumentList: React.FC<Props> = ({
           </Tbody>
         </Table>
       </TableContainer>
+      {selectedDocumentId !== null && (
+        <EditModal
+          documentId={selectedDocumentId}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedDocumentId(null);
+          }}
+        />
+      )}
     </>
   );
 };
