@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import axiosInstance from "../services/axios";
 import {
     Box,
     Button,
@@ -14,7 +15,12 @@ import {
     ModalOverlay,
     Text
 } from "@chakra-ui/react";
-import axiosInstance from "../services/axios";
+
+interface Document {
+    id: number;
+    name: string;
+    description: string;
+}
 
 interface EditModalProps {
     documentId: number;
@@ -27,6 +33,20 @@ const EditModal: React.FC<EditModalProps> = ({ documentId, isOpen, onClose }) =>
     const [documentDescription, setDocumentDescription] = useState("");
     const [file, setFile] = useState<File | null>(null); // Add state for file
     const [error, setError] = useState<string | null>(null);
+    const [documents, setDocuments] = useState<Document[]>([]);
+
+    useEffect(() => {
+        const fetchDocuments = async () => {
+            try {
+                const response = await axiosInstance.get<Document[]>('/documents');
+                setDocuments(response.data);
+            } catch (error) {
+                console.error('Error fetching documents:', error);
+            }
+        };
+
+        fetchDocuments();
+    }, []);
 
     const fetchData = async () => {
         try {
@@ -46,6 +66,7 @@ const EditModal: React.FC<EditModalProps> = ({ documentId, isOpen, onClose }) =>
             formData.append('description', documentDescription);
             if (file) { // Only append the file if it exists
                 formData.append('file', file);
+                console.log(file);
             }
 
             const response = await axiosInstance.put(`/documents/edit/${documentId}`, formData, {
@@ -60,9 +81,9 @@ const EditModal: React.FC<EditModalProps> = ({ documentId, isOpen, onClose }) =>
         }
     };
 
-
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files ? e.target.files[0] : null;
+        console.log(selectedFile);
         setFile(selectedFile);
     };
 
@@ -75,14 +96,17 @@ const EditModal: React.FC<EditModalProps> = ({ documentId, isOpen, onClose }) =>
                 <ModalBody pb={6}>
                     <FormControl>
                         <FormLabel>Document Name</FormLabel>
-                        <Input
-                            value={documentName}
-                            onChange={(e) => setDocumentName(e.target.value)}
-                        />
+                            <Input
+                                key={documentId}
+                                placeholder={documents.find(doc => doc.id === documentId)?.name || ''}
+                                value={documentName}
+                                onChange={(e) => setDocumentName(e.target.value)}
+                            />
                     </FormControl>
                     <FormControl mt={4}>
                         <FormLabel>Description</FormLabel>
-                        <Input
+                        <Input key={documentId}
+                            placeholder={documents.find(doc => doc.id === documentId)?.description || ''}
                             value={documentDescription}
                             onChange={(e) => setDocumentDescription(e.target.value)}
                         />
