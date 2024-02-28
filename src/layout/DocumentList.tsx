@@ -15,13 +15,7 @@ import axiosInstance from "../services/axios";
 import ActionButton from "../components/ActionButton";
 import { DocumentQuery } from "../App";
 import EditModal from "../components/EditModal";
-
-interface Document {
-  id: number;
-  name: string;
-  description: string;
-  categoryId: number;
-}
+import { Document } from "../hooks/useDocuments";
 
 interface Props {
   documentQuery: DocumentQuery;
@@ -36,11 +30,11 @@ const DocumentList: React.FC<Props> = ({
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
+    null
+  );
 
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,7 +63,6 @@ const DocumentList: React.FC<Props> = ({
   const handleEditButtonClick = () => {
     setIsEditModalOpen(!isEditModalOpen);
   };
-
 
   if (isLoading) return <Spinner />;
   if (error) return <Text>{error}</Text>;
@@ -110,6 +103,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"view"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -119,6 +113,7 @@ const DocumentList: React.FC<Props> = ({
                       size={"sm"}
                       padding={0}
                       onClick={handleEditButtonClick}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -127,6 +122,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"download"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -135,6 +131,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"favourite"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                   <Td>
@@ -143,6 +140,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"delete"}
                       size={"sm"}
                       padding={0}
+                      setDocuments={setDocuments}
                     />
                   </Td>
                 </Tr>
@@ -152,15 +150,15 @@ const DocumentList: React.FC<Props> = ({
         </Table>
       </TableContainer>
       {selectedDocumentId !== null && (
-          <EditModal
-              documentId={selectedDocumentId}
-              isOpen={isEditModalOpen}
-              onClose={() => {
-                setIsEditModalOpen(false);
-                setSelectedDocumentId(null);
-              }} />
-          )}
-
+        <EditModal
+          documentId={selectedDocumentId}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedDocumentId(null);
+          }}
+        />
+      )}
     </>
   );
 };

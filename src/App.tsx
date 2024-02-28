@@ -8,7 +8,6 @@ import {
   HStack,
   Icon,
   Show,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import NavBar from "./layout/NavBar";
@@ -22,13 +21,16 @@ import DocumentList from "./layout/DocumentList";
 export interface DocumentQuery {
   category: Category | null;
   searchText: string;
+  isFavorites?: boolean;
 }
 
 function App() {
-  const [documentQuery, setDocumentQuery] = useState<DocumentQuery>(
-    {} as DocumentQuery
-  );
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [documentQuery, setDocumentQuery] = useState<DocumentQuery>({
+    category: null,
+    searchText: "",
+  });
 
   return (
     <Router>
