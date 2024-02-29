@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import axiosInstance from "../../services/axios";
 import {
   Box,
@@ -15,29 +16,27 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-
-interface Document {
-  id: number;
-  name: string;
-  description: string;
-}
+import { Document } from "../../hooks/useDocuments";
 
 interface EditModalProps {
   documentId: number;
   isOpen: boolean;
   onClose: () => void;
+  documents: Document[];
+  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
 }
 
 const EditModal: React.FC<EditModalProps> = ({
   documentId,
   isOpen,
   onClose,
+  documents,
+  setDocuments,
 }) => {
   const [documentName, setDocumentName] = useState("");
   const [documentDescription, setDocumentDescription] = useState("");
   const [file, setFile] = useState<File | null>(null); // Add state for file
   const [error, setError] = useState<string | null>(null);
-  const [documents, setDocuments] = useState<Document[]>([]);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -83,10 +82,15 @@ const EditModal: React.FC<EditModalProps> = ({
           },
         }
       );
-      window.location.reload();
+      const updatedDocumentsResponse = await axiosInstance.get<Document[]>(
+        "/documents"
+      );
+      setDocuments(updatedDocumentsResponse.data);
       onClose(); // Close the modal after successful update
+      toast.success("Document updated successfully.");
     } catch (error: any) {
       setError(error.message);
+      toast.error("Error updating document: " + error.message);
     }
   };
 

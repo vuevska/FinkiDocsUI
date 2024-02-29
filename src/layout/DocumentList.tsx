@@ -104,6 +104,7 @@ const DocumentList: React.FC<Props> = ({
                       size={"sm"}
                       padding={0}
                       setDocuments={setDocuments}
+                      documents={documents}
                     />
                   </Td>
                   <Td>
@@ -113,6 +114,7 @@ const DocumentList: React.FC<Props> = ({
                       size={"sm"}
                       padding={0}
                       onClick={handleEditButtonClick}
+                      documents={documents}
                       setDocuments={setDocuments}
                     />
                   </Td>
@@ -122,6 +124,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"download"}
                       size={"sm"}
                       padding={0}
+                      documents={documents}
                       setDocuments={setDocuments}
                     />
                   </Td>
@@ -132,6 +135,7 @@ const DocumentList: React.FC<Props> = ({
                       size={"sm"}
                       padding={0}
                       setDocuments={setDocuments}
+                      documents={documents}
                       isFavourites={isFavorites}
                     />
                   </Td>
@@ -141,6 +145,7 @@ const DocumentList: React.FC<Props> = ({
                       action={"delete"}
                       size={"sm"}
                       padding={0}
+                      documents={documents}
                       setDocuments={setDocuments}
                     />
                   </Td>
@@ -157,6 +162,12 @@ const DocumentList: React.FC<Props> = ({
           onClose={() => {
             setIsEditModalOpen(false);
             setSelectedDocumentId(null);
+          }}
+          documents={[]}
+          setDocuments={function (
+            value: React.SetStateAction<Document[]>
+          ): void {
+            throw new Error("Function not implemented.");
           }}
         />
       )}

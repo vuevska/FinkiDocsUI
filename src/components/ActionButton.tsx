@@ -22,6 +22,7 @@ interface Props {
   documentId: number;
   size: "sm" | "md" | "lg";
   padding: number;
+  documents: Document[];
   setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
   onClick?: () => void;
   isFavourites?: boolean;
@@ -32,6 +33,7 @@ const ActionButton = ({
   size,
   padding,
   documentId,
+  documents,
   setDocuments,
   isFavourites,
 }: Props) => {
@@ -121,6 +123,8 @@ const ActionButton = ({
         <EditModal
           documentId={documentId}
           isOpen={isEditModalOpen}
+          documents={documents}
+          setDocuments={setDocuments}
           onClose={() => setIsEditModalOpen(false)}
         />
       )}
