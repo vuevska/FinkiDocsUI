@@ -14,7 +14,7 @@ import {
 import axiosInstance from "../services/axios";
 import ActionButton from "../components/ActionButton";
 import { DocumentQuery } from "../App";
-import EditModal from "../components/EditModal";
+import EditModal from "../components/modals/EditModal";
 import { Document } from "../hooks/useDocuments";
 
 interface Props {
@@ -77,10 +77,10 @@ const DocumentList: React.FC<Props> = ({
         <Table variant="striped" colorScheme="blue">
           <Thead>
             <Tr>
-              <Th>Document Name</Th>
-              <Th>Description</Th>
+              <Th>Име на документ</Th>
+              <Th>Опис</Th>
               <Th colSpan={5} textAlign="center">
-                Actions
+                Акции
               </Th>
             </Tr>
           </Thead>
@@ -132,6 +132,7 @@ const DocumentList: React.FC<Props> = ({
                       size={"sm"}
                       padding={0}
                       setDocuments={setDocuments}
+                      isFavourites={isFavorites}
                     />
                   </Td>
                   <Td>

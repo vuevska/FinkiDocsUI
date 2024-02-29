@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalOverlay,
-  ModalFooter,
-  ModalHeader,
-  ModalContent,
-} from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
 import {
   AiOutlineDelete,
   AiOutlineDownload,
@@ -20,13 +10,13 @@ import {
 
 import { Document } from "../hooks/useDocuments";
 
-import EditModal from "./EditModal";
+import EditModal from "./modals/EditModal";
 import viewDocument from "../hooks/documents/viewDocument";
 import favouriteDocument from "../hooks/documents/favouriteDocument";
 import downloadDocument from "../hooks/documents/downloadDocument";
 import deleteDocument from "../hooks/documents/deleteDocument";
+import DeleteModal from "./modals/DeleteModal";
 
-//@Author Bojan, ask for help if needed.
 interface Props {
   action: "delete" | "edit" | "view" | "download" | "favourite";
   documentId: number;
@@ -34,6 +24,7 @@ interface Props {
   padding: number;
   setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
   onClick?: () => void;
+  isFavourites?: boolean;
 }
 
 const ActionButton = ({
@@ -42,12 +33,11 @@ const ActionButton = ({
   padding,
   documentId,
   setDocuments,
+  isFavourites,
 }: Props) => {
-  // There is a backend part for this BUT feel free to make it better, it does not use DTO right now!
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleDelete = () => {
-    setIsModalOpen(true);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const handleDeleteButtonClick = () => {
+    setIsDeleteModalOpen(true);
   };
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -57,20 +47,14 @@ const ActionButton = ({
 
   const handleAction = () => {
     if (action === "delete") {
-      console.log("Delete action");
-      deleteDocument(documentId, setDocuments);
+      handleDeleteButtonClick();
     } else if (action === "edit") {
-      console.log("Edit action");
-      // editDocument(documentId);
       handleEditButtonClick();
     } else if (action === "view") {
-      console.log("View action");
       viewDocument(documentId);
     } else if (action === "favourite") {
-      console.log("Favourite action");
-      favouriteDocument(documentId, setDocuments);
+      favouriteDocument(documentId, setDocuments, isFavourites);
     } else if (action === "download") {
-      console.log("Download action");
       downloadDocument(documentId);
     }
   };
@@ -92,15 +76,14 @@ const ActionButton = ({
 
   const confirmDelete = () => {
     deleteDocument(documentId, setDocuments);
-    setIsModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
-  const icon = getIcon();
+  //const icon = getIcon();
 
-  // Can be changed to use ifs, quick fix by Bojan
   const getAriaLabel = (action: string) => {
     switch (action) {
       case "delete":
@@ -120,42 +103,27 @@ const ActionButton = ({
 
   return (
     <>
-      <>
-        <IconButton
-          icon={getIcon()}
-          onClick={action === "delete" ? handleDelete : () => handleAction()}
-          fontSize={size}
-          padding={padding}
-          aria-label={getAriaLabel(action)}
+      <IconButton
+        icon={getIcon()}
+        onClick={() => handleAction()}
+        fontSize={size}
+        padding={padding}
+        aria-label={getAriaLabel(action)}
+      />
+      {action === "delete" && (
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeModal}
+          confirmDelete={confirmDelete}
         />
-        {action === "edit" && (
-          <EditModal
-            documentId={documentId}
-            isOpen={isEditModalOpen}
-            onClose={() => setIsEditModalOpen(false)}
-          />
-        )}
-      </>
-
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Отстрани Документ</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            Дали си сигурен дека сакаш да го отстраниш овој документ?
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={confirmDelete}>
-              Отстрани
-            </Button>
-            <Button variant="ghost" onClick={closeModal}>
-              Назад
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      )}
+      {action === "edit" && (
+        <EditModal
+          documentId={documentId}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+        />
+      )}
     </>
   );
 };

@@ -16,7 +16,8 @@ interface Favourite {
 }
 const favouriteDocument = async (
   documentId: number,
-  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>
+  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>,
+  isFavourites?: boolean
 ) => {
   try {
     const response = await axiosInstance.get("/favourites");
@@ -26,9 +27,12 @@ const favouriteDocument = async (
       if (favouritesList[i].id === documentId) {
         found = true;
         await axiosInstance.delete(`/favourites/remove/${documentId}`);
-        setDocuments((prevDocuments) =>
-          prevDocuments.filter((doc) => doc.id !== documentId)
-        );
+        if (isFavourites === true) {
+          setDocuments((prevDocuments) =>
+            prevDocuments.filter((doc) => doc.id !== documentId)
+          );
+        }
+
         toast.warn("Document removed from favourites.");
         break;
       }
@@ -37,12 +41,6 @@ const favouriteDocument = async (
       await axiosInstance.post(`/favourites/add/${documentId}`);
       toast.success("Document added to favourites.");
     }
-    setDocuments((prevDocuments) =>
-      prevDocuments.map((doc) => ({
-        ...doc,
-        isFavourite: favouritesList.some((fav) => fav.id === doc.id),
-      }))
-    );
   } catch (error) {
     console.error("Error:", error);
     toast.error("Error adding document as favourite.");

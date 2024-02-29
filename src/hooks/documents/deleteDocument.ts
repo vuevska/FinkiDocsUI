@@ -2,7 +2,6 @@ import { toast } from "react-toastify";
 import axiosInstance from "../../services/axios";
 import { Document } from "../useDocuments";
 
-// There is a backend part for this BUT feel free to make it better, it does not use DTO right now!
 const deleteDocument = (
   documentId: number,
   setDocuments: React.Dispatch<React.SetStateAction<Document[]>>
