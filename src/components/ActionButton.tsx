@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconButton } from "@chakra-ui/react";
 import {
   AiOutlineDelete,
@@ -6,6 +6,7 @@ import {
   AiOutlineEdit,
   AiOutlineEye,
   AiOutlineStar,
+  AiFillStar,
 } from "react-icons/ai";
 
 import { Document } from "../hooks/useDocuments";
@@ -16,6 +17,7 @@ import favouriteDocument from "../hooks/documents/favouriteDocument";
 import downloadDocument from "../hooks/documents/downloadDocument";
 import deleteDocument from "../hooks/documents/deleteDocument";
 import DeleteModal from "./modals/DeleteModal";
+import axiosInstance from "../services/axios";
 
 interface Props {
   action: "delete" | "edit" | "view" | "download" | "favourite";
@@ -47,6 +49,19 @@ const ActionButton = ({
     setIsEditModalOpen(true);
   };
 
+  const [favorites, setFavorites] = useState<Document[]>([]);
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const response = await axiosInstance.get<Document[]>("/favourites");
+        setFavorites(response.data);
+      } catch (error) {
+        console.error("Error fetching documents:", error);
+      }
+    };
+    fetchDocuments();
+  }, []);
+
   const handleAction = () => {
     if (action === "delete") {
       handleDeleteButtonClick();
@@ -55,7 +70,7 @@ const ActionButton = ({
     } else if (action === "view") {
       viewDocument(documentId);
     } else if (action === "favourite") {
-      favouriteDocument(documentId, setDocuments, isFavourites);
+      favouriteDocument(documentId, setDocuments, setFavorites, isFavourites);
     } else if (action === "download") {
       downloadDocument(documentId);
     }
@@ -67,7 +82,10 @@ const ActionButton = ({
     } else if (action === "edit") {
       return <AiOutlineEdit />;
     } else if (action === "favourite") {
-      return <AiOutlineStar />;
+      // ova proveruva dali dokumentot go ima vo listata na favorites
+      // vo idnina treba da se proveruva i spored id na najaveniot korisnik
+      const isFav = favorites.some((fav) => fav.id === documentId);
+      return isFav ? <AiFillStar /> : <AiOutlineStar />;
     } else if (action === "download") {
       return <AiOutlineDownload />;
     } else if (action === "view") {
