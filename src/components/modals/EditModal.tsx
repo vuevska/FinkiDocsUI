@@ -100,11 +100,11 @@ const EditModal: React.FC<EditModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Document</ModalHeader>
+        <ModalHeader>Промени Документ</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <FormControl>
-            <FormLabel>Document Name</FormLabel>
+            <FormLabel>Име</FormLabel>
             <Input
               key={documentId}
               placeholder={
@@ -115,7 +115,7 @@ const EditModal: React.FC<EditModalProps> = ({
             />
           </FormControl>
           <FormControl mt={4}>
-            <FormLabel>Description</FormLabel>
+            <FormLabel>Опис</FormLabel>
             <Input
               key={documentId}
               placeholder={
@@ -127,7 +127,7 @@ const EditModal: React.FC<EditModalProps> = ({
             />
           </FormControl>
           <FormControl mt={4}>
-            <FormLabel>Upload File</FormLabel>
+            <FormLabel>Прикачи датотека</FormLabel>
             <Input
               type="file"
               onChange={handleFileChange}
@@ -138,9 +138,9 @@ const EditModal: React.FC<EditModalProps> = ({
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={updateDocument}>
-            Save
+            Зачувај
           </Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>Назад</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
