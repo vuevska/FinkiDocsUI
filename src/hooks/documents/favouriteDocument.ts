@@ -2,12 +2,6 @@ import { toast } from "react-toastify";
 import axiosInstance from "../../services/axios";
 import { Document } from "../useDocuments";
 
-// This is made to work if we have is_favourite in the db as a column to documents as
-// Bojan's proposal in DC on 12.8.2023 at 12:45 (use to find message easily)
-
-// Okay, this needs to edit the document and change the value of the column of is_favourite to 1 (true)
-// By default it will be 0 (false)
-
 interface Favourite {
   id: number;
   name: string;
@@ -16,7 +10,9 @@ interface Favourite {
 }
 const favouriteDocument = async (
   documentId: number,
-  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>
+  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>,
+  setFavorites: React.Dispatch<React.SetStateAction<Document[]>>,
+  isFavourites?: boolean
 ) => {
   try {
     const response = await axiosInstance.get("/favourites");
@@ -26,9 +22,12 @@ const favouriteDocument = async (
       if (favouritesList[i].id === documentId) {
         found = true;
         await axiosInstance.delete(`/favourites/remove/${documentId}`);
-        setDocuments((prevDocuments) =>
-          prevDocuments.filter((doc) => doc.id !== documentId)
-        );
+        if (isFavourites === true) {
+          setDocuments((prevDocuments) =>
+            prevDocuments.filter((doc) => doc.id !== documentId)
+          );
+        }
+
         toast.warn("Document removed from favourites.");
         break;
       }
@@ -37,15 +36,18 @@ const favouriteDocument = async (
       await axiosInstance.post(`/favourites/add/${documentId}`);
       toast.success("Document added to favourites.");
     }
-    setDocuments((prevDocuments) =>
-      prevDocuments.map((doc) => ({
-        ...doc,
-        isFavourite: favouritesList.some((fav) => fav.id === doc.id),
-      }))
-    );
   } catch (error) {
     console.error("Error:", error);
     toast.error("Error adding document as favourite.");
+  } finally {
+    await axiosInstance
+      .get<Document[]>("/favourites")
+      .then((response) => {
+        setFavorites(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching favorites:", error);
+      });
   }
 };
 
