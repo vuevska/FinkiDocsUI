@@ -7,6 +7,7 @@ import {
   AiOutlineEye,
   AiOutlineStar,
   AiFillStar,
+  AiOutlineForm,
 } from "react-icons/ai";
 
 import { Document } from "../hooks/useDocuments";
@@ -18,9 +19,10 @@ import downloadDocument from "../hooks/documents/downloadDocument";
 import deleteDocument from "../hooks/documents/deleteDocument";
 import DeleteModal from "./modals/DeleteModal";
 import axiosInstance from "../services/axios";
+import FillModal from "./modals/FillModal";
 
 interface Props {
-  action: "delete" | "edit" | "view" | "download" | "favourite";
+  action: "delete" | "edit" | "view" | "download" | "favourite" | "fill";
   documentId: number;
   size: "sm" | "md" | "lg";
   padding: number;
@@ -49,6 +51,11 @@ const ActionButton = ({
     setIsEditModalOpen(true);
   };
 
+  const [isFillModalOpen, setIsFillModalOpen] = useState(false);
+  const handleFillButtonClick = () => {
+    setIsFillModalOpen(true);
+  };
+
   const [favorites, setFavorites] = useState<Document[]>([]);
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -69,6 +76,8 @@ const ActionButton = ({
       handleEditButtonClick();
     } else if (action === "view") {
       viewDocument(documentId);
+    } else if (action === "fill") {
+      handleFillButtonClick();
     } else if (action === "favourite") {
       favouriteDocument(documentId, setDocuments, setFavorites, isFavourites);
     } else if (action === "download") {
@@ -90,6 +99,8 @@ const ActionButton = ({
       return <AiOutlineDownload />;
     } else if (action === "view") {
       return <AiOutlineEye />;
+    } else if (action === "fill") {
+      return <AiOutlineForm />;
     }
     return <> </>;
   };
@@ -116,6 +127,8 @@ const ActionButton = ({
         return "Add to Favorites";
       case "download":
         return "Download Document";
+      case "fill":
+        return "Fill Document";
       default:
         return "";
     }
@@ -144,6 +157,13 @@ const ActionButton = ({
           documents={documents}
           setDocuments={setDocuments}
           onClose={() => setIsEditModalOpen(false)}
+        />
+      )}
+      {action === "fill" && (
+        <FillModal
+          isOpen={isFillModalOpen}
+          onClose={() => setIsFillModalOpen(false)}
+          documentId={documentId}
         />
       )}
     </>
