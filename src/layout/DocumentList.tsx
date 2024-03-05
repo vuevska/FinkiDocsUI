@@ -110,6 +110,16 @@ const DocumentList: React.FC<Props> = ({
                   <Td>
                     <ActionButton
                       documentId={doc.id}
+                      action={"fill"}
+                      size={"sm"}
+                      padding={0}
+                      setDocuments={setDocuments}
+                      documents={documents}
+                    />
+                  </Td>
+                  <Td>
+                    <ActionButton
+                      documentId={doc.id}
                       action={"edit"}
                       size={"sm"}
                       padding={0}
