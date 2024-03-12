@@ -1,4 +1,5 @@
 import {
+  Box, Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -6,8 +7,8 @@ import {
   Grid,
   GridItem,
   HStack,
-  Icon,
-  Show,
+  Icon, IconButton,
+  Show, Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
 import NavBar from "./layout/NavBar";
@@ -17,6 +18,8 @@ import { Category } from "./hooks/useCategories";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import DocumentList from "./layout/DocumentList";
+import {HiOutlineDocumentAdd} from "react-icons/hi";
+import AddModal from "./components/modals/AddModal";
 
 export interface DocumentQuery {
   category: Category | null;
@@ -26,6 +29,21 @@ export interface DocumentQuery {
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [documents, setDocuments] = useState<Document[]>([]); // Define setDocuments here
+
+
+  const handleAddModalOpen = () => {
+    setAddModalOpen(true);
+  };
+  const handleAddModalClose = () => {
+    setAddModalOpen(false);
+  };
+
+  const handleAddModalSubmit = () => {
+    setAddModalOpen(false);
+  };
+
 
   const [documentQuery, setDocumentQuery] = useState<DocumentQuery>({
     category: null,
@@ -123,6 +141,18 @@ function App() {
             >
               Омилени
             </Link>
+            <Spacer />
+
+            {/*<IconButton colorScheme='green' marginRight={10} aria-label='Add' icon={<HiOutlineDocumentAdd />} />*/}
+            <Button colorScheme='green' size='md' marginRight={10} onClick={handleAddModalOpen}>Додади нов документ</Button>
+            <AddModal
+                isOpen={isAddModalOpen}
+                onClose={handleAddModalClose}
+                // onSubmit={handleAddModalSubmit}
+                setDocuments={setDocuments}
+            />
+
+
           </HStack>
         </GridItem>
 
