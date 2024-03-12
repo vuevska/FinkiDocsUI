@@ -20,6 +20,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import DocumentList from "./layout/DocumentList";
 import {HiOutlineDocumentAdd} from "react-icons/hi";
 import AddModal from "./components/modals/AddModal";
+import Footer from "./layout/Footer";
 
 export interface DocumentQuery {
   category: Category | null;
@@ -157,7 +158,8 @@ function App() {
         </GridItem>
 
         <GridItem area="footer" textAlign="center">
-          Footer
+          {/*Footer*/}
+          <Footer/>
         </GridItem>
       </Grid>
     </Router>
