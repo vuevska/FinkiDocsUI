@@ -16,11 +16,13 @@
     "@syncfusion/ej2-react-inputs": "^24.2.7",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.2",
+    "chakra-paginator": "^0.7.3",
     "cors": "^2.8.5",
     "framer-motion": "^10.16.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
+    "react-paginate": "^8.2.0",
     "react-router-dom": "^6.21.1",
     "react-toastify": "^10.0.4"
   },
