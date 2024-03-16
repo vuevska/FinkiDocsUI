@@ -22,6 +22,7 @@ import {HiOutlineDocumentAdd} from "react-icons/hi";
 import AddModal from "./components/modals/AddModal";
 import Footer from "./layout/Footer";
 
+
 export interface DocumentQuery {
   category: Category | null;
   searchText: string;
