@@ -1,5 +1,6 @@
 import {
-  Box, Button,
+  Box,
+  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -7,8 +8,10 @@ import {
   Grid,
   GridItem,
   HStack,
-  Icon, IconButton,
-  Show, Spacer,
+  Icon,
+  IconButton,
+  Show,
+  Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
 import NavBar from "./layout/NavBar";
@@ -18,10 +21,9 @@ import { Category } from "./hooks/useCategories";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import DocumentList from "./layout/DocumentList";
-import {HiOutlineDocumentAdd} from "react-icons/hi";
 import AddModal from "./components/modals/AddModal";
 import Footer from "./layout/Footer";
-
+import { Document } from "./hooks/useDocuments";
 
 export interface DocumentQuery {
   category: Category | null;
@@ -32,8 +34,7 @@ export interface DocumentQuery {
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [documents, setDocuments] = useState<Document[]>([]); // Define setDocuments here
-
+  const [documents, setDocuments] = useState<Document[]>([]);
 
   const handleAddModalOpen = () => {
     setAddModalOpen(true);
@@ -41,11 +42,6 @@ function App() {
   const handleAddModalClose = () => {
     setAddModalOpen(false);
   };
-
-  const handleAddModalSubmit = () => {
-    setAddModalOpen(false);
-  };
-
 
   const [documentQuery, setDocumentQuery] = useState<DocumentQuery>({
     category: null,
@@ -145,22 +141,25 @@ function App() {
             </Link>
             <Spacer />
 
-            {/*<IconButton colorScheme='green' marginRight={10} aria-label='Add' icon={<HiOutlineDocumentAdd />} />*/}
-            <Button colorScheme='green' size='md' marginRight={10} onClick={handleAddModalOpen}>Додади нов документ</Button>
+            <Button
+              variant={"link"}
+              textDecor={"underline"}
+              size="md"
+              marginRight={10}
+              onClick={handleAddModalOpen}
+            >
+              Додади нов документ
+            </Button>
             <AddModal
-                isOpen={isAddModalOpen}
-                onClose={handleAddModalClose}
-                // onSubmit={handleAddModalSubmit}
-                setDocuments={setDocuments}
+              isOpen={isAddModalOpen}
+              onClose={handleAddModalClose}
+              setDocuments={setDocuments}
             />
-
-
           </HStack>
         </GridItem>
 
         <GridItem area="footer" textAlign="center">
-          {/*Footer*/}
-          <Footer/>
+          <Footer />
         </GridItem>
       </Grid>
     </Router>
