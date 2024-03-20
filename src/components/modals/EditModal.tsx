@@ -30,8 +30,9 @@ const EditModal: React.FC<EditModalProps> = ({
   documentId,
   isOpen,
   onClose,
-  documents,
+  // documents,
   setDocuments,
+    documents=[],
 }) => {
   const [documentName, setDocumentName] = useState("");
   const [documentDescription, setDocumentDescription] = useState("");
@@ -42,7 +43,7 @@ const EditModal: React.FC<EditModalProps> = ({
     const fetchDocuments = async () => {
       try {
         const response = await axiosInstance.get<Document[]>("/documents");
-        setDocuments(response.data);
+        setDocuments(response.data.content);
       } catch (error) {
         console.error("Error fetching documents:", error);
       }
@@ -107,29 +108,52 @@ const EditModal: React.FC<EditModalProps> = ({
         <ModalHeader>Промени Документ</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
+          {/*<FormControl>*/}
+          {/*  <FormLabel>Име</FormLabel>*/}
+          {/*  <Input*/}
+          {/*    key={documentId}*/}
+          {/*    placeholder={*/}
+          {/*      documents.find((doc) => doc.id === documentId)?.name || ""*/}
+          {/*    }*/}
+          {/*    value={documentName}*/}
+          {/*    onChange={(e) => setDocumentName(e.target.value)}*/}
+          {/*  />*/}
+          {/*</FormControl>*/}
+          {/*<FormControl mt={4}>*/}
+          {/*  <FormLabel>Опис</FormLabel>*/}
+          {/*  <Input*/}
+          {/*    key={documentId}*/}
+          {/*    placeholder={*/}
+          {/*      documents.find((doc) => doc.id === documentId)?.description ||*/}
+          {/*      ""*/}
+          {/*    }*/}
+          {/*    value={documentDescription}*/}
+          {/*    onChange={(e) => setDocumentDescription(e.target.value)}*/}
+          {/*  />*/}
+          {/*</FormControl>*/}
           <FormControl>
             <FormLabel>Име</FormLabel>
             <Input
-              key={documentId}
-              placeholder={
-                documents.find((doc) => doc.id === documentId)?.name || ""
-              }
-              value={documentName}
-              onChange={(e) => setDocumentName(e.target.value)}
+                key={documentId}
+                placeholder={
+                    documents?.find((doc) => doc.id === documentId)?.name || ""
+            }
+                value={documentName}
+                onChange={(e) => setDocumentName(e.target.value)}
             />
           </FormControl>
           <FormControl mt={4}>
             <FormLabel>Опис</FormLabel>
             <Input
-              key={documentId}
-              placeholder={
-                documents.find((doc) => doc.id === documentId)?.description ||
-                ""
-              }
-              value={documentDescription}
-              onChange={(e) => setDocumentDescription(e.target.value)}
+                key={documentId}
+                placeholder={
+                    documents?.find((doc) => doc.id === documentId)?.description || ""
+                }
+                value={documentDescription}
+                onChange={(e) => setDocumentDescription(e.target.value)}
             />
           </FormControl>
+
           <FormControl mt={4}>
             <FormLabel>Прикачи датотека</FormLabel>
             <Input
