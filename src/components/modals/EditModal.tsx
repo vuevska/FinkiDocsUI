@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import axiosInstance from "../../services/axios";
 import {
-  Box,
   Button,
   FormControl,
   FormLabel,
@@ -35,7 +34,7 @@ const EditModal: React.FC<EditModalProps> = ({
 }) => {
   const [documentName, setDocumentName] = useState("");
   const [documentDescription, setDocumentDescription] = useState("");
-  const [file, setFile] = useState<File | null>(null); // Add state for file
+  const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -51,19 +50,29 @@ const EditModal: React.FC<EditModalProps> = ({
     fetchDocuments();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await axiosInstance.get(`/documents/edit/${documentId}`);
-      const { name, description } = response.data;
-      setDocumentName(name);
-      setDocumentDescription(description);
-    } catch (error: any) {
-      setError(error.message);
-    }
-  };
+  useEffect(() => {
+    const fetchDocument = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/documents/get/${documentId}`
+        );
+        const { name, description } = response.data;
+        setDocumentName(name);
+        setDocumentDescription(description);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    };
+    fetchDocument();
+  }, [documentId]);
 
   const updateDocument = async () => {
     try {
+      if (!documentName || !documentDescription || !file) {
+        setError("Пополнете ги сите полиња.");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("name", documentName);
       formData.append("description", documentDescription);
@@ -86,7 +95,7 @@ const EditModal: React.FC<EditModalProps> = ({
         "/documents"
       );
       setDocuments(updatedDocumentsResponse.data);
-      onClose(); // Close the modal after successful update
+      onClose();
       toast.success("Document updated successfully.");
     } catch (error: any) {
       setError(error.message);
