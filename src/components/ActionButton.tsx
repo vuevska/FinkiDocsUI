@@ -67,7 +67,7 @@ const ActionButton = ({
       }
     };
     fetchDocuments();
-  }, []);
+  }, [documents]);
 
   const handleAction = () => {
     if (action === "delete") {
@@ -93,8 +93,10 @@ const ActionButton = ({
     } else if (action === "favourite") {
       // ova proveruva dali dokumentot go ima vo listata na favorites
       // vo idnina treba da se proveruva i spored id na najaveniot korisnik
-      const isFav = favorites.some((fav) => fav.id === documentId);
-      return isFav ? <AiFillStar /> : <AiOutlineStar />;
+      if (favorites.length !== 0) {
+        const isFav = favorites.some((fav) => fav.id === documentId);
+        return isFav ? <AiFillStar /> : <AiOutlineStar />;
+      } else return <AiOutlineStar />;
     } else if (action === "download") {
       return <AiOutlineDownload />;
     } else if (action === "view") {

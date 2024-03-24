@@ -33,19 +33,19 @@ export interface DocumentQuery {
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [documents, setDocuments] = useState<Document[]>([]);
+  // const [isAddModalOpen, setAddModalOpen] = useState(false);
+  // const [documents, setDocuments] = useState<Document[]>([]);
 
-  const handleAddModalOpen = () => {
-    setAddModalOpen(true);
-  };
-  const handleAddModalClose = () => {
-    setAddModalOpen(false);
-  };
+  // const handleAddModalOpen = () => {
+  //   setAddModalOpen(true);
+  // };
+  // const handleAddModalClose = () => {
+  //   setAddModalOpen(false);
+  // };
 
-  const handleAddModalSubmit = () => {
-    setAddModalOpen(false);
-  };
+  // const handleAddModalSubmit = () => {
+  //   setAddModalOpen(false);
+  // };
 
   const [documentQuery, setDocumentQuery] = useState<DocumentQuery>({
     category: null,
@@ -145,7 +145,7 @@ function App() {
             </Link>
             <Spacer />
 
-            <Button
+            {/* <Button
               variant={"link"}
               textDecor={"underline"}
               size="md"
@@ -159,7 +159,7 @@ function App() {
               onClose={handleAddModalClose}
               // onSubmit={handleAddModalSubmit}
               setDocuments={setDocuments}
-            />
+            /> */}
           </HStack>
         </GridItem>
 
