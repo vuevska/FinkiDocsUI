@@ -1,6 +1,4 @@
 import {
-  Box,
-  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -9,48 +7,66 @@ import {
   GridItem,
   HStack,
   Icon,
-  IconButton,
   Show,
-  Spacer,
+  Spinner,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import NavBar from "./layout/NavBar";
 import CategoryList from "./layout/CategoryList";
-import { useState } from "react";
 import { Category } from "./hooks/useCategories";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import DocumentList from "./layout/DocumentList";
-import AddModal from "./components/modals/AddModal";
 import Footer from "./layout/Footer";
+import { useEffect, useState } from "react";
+import glavnaFunkcija from "./services/glavnaFunkcija";
 import { Document } from "./hooks/useDocuments";
 
-export interface DocumentQuery {
-  category: Category | null;
-  searchText: string;
-  isFavorites?: boolean;
+export interface DocumentFilters {
+  filterCategory: Category | null;
+  filterText: string;
 }
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [isAddModalOpen, setAddModalOpen] = useState(false);
-  // const [documents, setDocuments] = useState<Document[]>([]);
 
-  // const handleAddModalOpen = () => {
-  //   setAddModalOpen(true);
-  // };
-  // const handleAddModalClose = () => {
-  //   setAddModalOpen(false);
-  // };
-
-  // const handleAddModalSubmit = () => {
-  //   setAddModalOpen(false);
-  // };
-
-  const [documentQuery, setDocumentQuery] = useState<DocumentQuery>({
-    category: null,
-    searchText: "",
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [isFavoritesSelected, setIsFavoritesSelected] =
+    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [documentFilters, setDocumentFilters] = useState<DocumentFilters>({
+    filterCategory: null,
+    filterText: "",
   });
+
+  const refreshDokumenti = async (
+    isFavoritesSelected: boolean,
+    documentFilters: DocumentFilters
+  ) => {
+    try {
+      const rezultat = await glavnaFunkcija(
+        isFavoritesSelected,
+        documentFilters
+      );
+
+      console.log("rez", rezultat?.data);
+
+      setDocuments(rezultat?.data ?? []);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshDokumenti(isFavoritesSelected, documentFilters);
+  }, [isFavoritesSelected, documentFilters]);
+
+  if (isLoading) return <Spinner />;
+  if (error) return <Text>{error}</Text>;
 
   return (
     <Router>
@@ -75,9 +91,14 @@ function App() {
                 <DrawerContent>
                   <DrawerBody paddingTop={5}>
                     <CategoryList
-                      selectedCategory={documentQuery.category}
+                      isFavoritesSelected={isFavoritesSelected}
+                      setIsFavoritesSelected={setIsFavoritesSelected}
+                      selectedCategory={documentFilters.filterCategory}
                       onSelectCategory={(category) =>
-                        setDocumentQuery({ ...documentQuery, category })
+                        setDocumentFilters({
+                          ...documentFilters,
+                          filterCategory: category,
+                        })
                       }
                     ></CategoryList>
                   </DrawerBody>
@@ -87,7 +108,10 @@ function App() {
 
             <NavBar
               onSearch={(searchText) =>
-                setDocumentQuery({ ...documentQuery, searchText })
+                setDocumentFilters({
+                  ...documentFilters,
+                  filterText: searchText,
+                })
               }
             />
           </HStack>
@@ -102,65 +126,27 @@ function App() {
             borderColor="black.300"
           >
             <CategoryList
-              selectedCategory={documentQuery.category}
+              isFavoritesSelected={isFavoritesSelected}
+              setIsFavoritesSelected={setIsFavoritesSelected}
+              selectedCategory={documentFilters.filterCategory}
               onSelectCategory={(category) =>
-                setDocumentQuery({ ...documentQuery, category })
+                setDocumentFilters({
+                  ...documentFilters,
+                  filterCategory: category,
+                })
               }
             />
           </GridItem>
         </Show>
 
         <GridItem area="main" margin={5} borderRadius={10}>
-          <Routes>
-            <Route
-              path="/"
-              element={<DocumentList documentQuery={documentQuery} />}
-            />
-            <Route
-              path="/favourites"
-              element={
-                <DocumentList documentQuery={documentQuery} isFavorites />
-              }
-            />
-          </Routes>
-          <HStack marginLeft={10}>
-            <Link
-              to="/"
-              style={{
-                textDecoration: "underline",
-                marginRight: "10px",
-              }}
-            >
-              Сите
-            </Link>
-            <div>|</div>
-            <Link
-              to="/favourites"
-              style={{
-                textDecoration: "underline",
-                marginLeft: "10px",
-              }}
-            >
-              Омилени
-            </Link>
-            <Spacer />
-
-            {/* <Button
-              variant={"link"}
-              textDecor={"underline"}
-              size="md"
-              marginRight={10}
-              onClick={handleAddModalOpen}
-            >
-              Додади нов документ
-            </Button>
-            <AddModal
-              isOpen={isAddModalOpen}
-              onClose={handleAddModalClose}
-              // onSubmit={handleAddModalSubmit}
-              setDocuments={setDocuments}
-            /> */}
-          </HStack>
+          <DocumentList
+            documents={documents}
+            setDocuments={setDocuments}
+            isFavoritesSelected={isFavoritesSelected}
+            documentFilters={documentFilters}
+            onSearch={() => console.log("prebaruvaj")}
+          />
         </GridItem>
 
         <GridItem area="footer" textAlign="center">

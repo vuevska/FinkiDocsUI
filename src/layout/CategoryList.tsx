@@ -9,27 +9,42 @@ import {
   HStack,
   Box,
   useColorMode,
+  Switch,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import useCategories, { Category } from "../hooks/useCategories";
-import { FaFilter } from "react-icons/fa";
 import { BiFilterAlt } from "react-icons/bi";
 
 interface Props {
   onSelectCategory: (category: Category | null) => void;
   selectedCategory: Category | null;
+  isFavoritesSelected: boolean;
+  setIsFavoritesSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
+const CategoryList = ({
+  onSelectCategory,
+  selectedCategory,
+  isFavoritesSelected,
+  setIsFavoritesSelected,
+}: Props) => {
   const { data, isLoading, error } = useCategories();
-  const { colorMode } = useColorMode(); // Accessing colorMode from Chakra UI
-
+  const { colorMode } = useColorMode();
   if (isLoading) return <Spinner />;
   if (error) return null;
 
+  const favoritesSwitchToggleButton = () => {
+    setIsFavoritesSelected(!isFavoritesSelected);
+  };
+
   return (
-    <Box bg={colorMode === "dark" ? "gray.700" : "blue.100"} p={4}>
+    <Box
+      bg={colorMode === "dark" ? "gray.700" : "blue.100"}
+      p={4}
+      marginTop={-5}
+    >
       {" "}
-      {/* Using colorMode to determine background color */}
       <VStack>
         <HStack>
           <BiFilterAlt />
@@ -104,6 +119,23 @@ const CategoryList = ({ onSelectCategory, selectedCategory }: Props) => {
             </ListItem>
           ))}
         </List>
+        <HStack marginTop={5}>
+          <BiFilterAlt />
+          <Text
+            fontSize={18}
+            fontWeight={"bold"}
+            color={colorMode === "dark" ? "white" : "black"}
+          >
+            Омилени
+          </Text>
+        </HStack>
+        <Divider color={"black"} />
+        <HStack spacing={3} paddingY={5}>
+          <FormControl display="flex" alignItems="center">
+            <FormLabel mb="0">Прикажи</FormLabel>
+            <Switch colorScheme="red" onChange={favoritesSwitchToggleButton} />
+          </FormControl>
+        </HStack>
       </VStack>
     </Box>
   );

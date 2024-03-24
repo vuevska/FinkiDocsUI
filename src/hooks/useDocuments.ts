@@ -1,4 +1,4 @@
-import { DocumentQuery } from "../App";
+import { DocumentFilters } from "../App";
 import useData from "./useData";
 
 export interface Document {
@@ -8,16 +8,16 @@ export interface Document {
   categoryId: number;
 }
 
-const useDocuments = (documentQuery: DocumentQuery) => {
-  const url = documentQuery.category?.id
-    ? `/documents/${documentQuery.category?.id}`
+const useDocuments = (documentQuery: DocumentFilters) => {
+  const url = documentQuery.filterCategory?.id
+    ? `/documents/${documentQuery.filterCategory?.id}`
     : "/documents";
   return useData<Document>(
     url,
     {
       params: {
         // category: documentQuery.category?.id,
-        searchText: documentQuery.searchText,
+        searchText: documentQuery.filterText,
       },
     },
     [documentQuery]
