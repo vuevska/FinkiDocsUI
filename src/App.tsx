@@ -51,7 +51,7 @@ function App() {
         documentFilters
       );
 
-      console.log("rez", rezultat?.data);
+      console.log("podatoci", rezultat?.data);
 
       setDocuments(rezultat?.data ?? []);
     } catch (error: any) {
@@ -145,7 +145,12 @@ function App() {
             setDocuments={setDocuments}
             isFavoritesSelected={isFavoritesSelected}
             documentFilters={documentFilters}
-            onSearch={() => console.log("prebaruvaj")}
+            onSearch={(filter) =>
+              setDocumentFilters({
+                ...documentFilters,
+                filterText: filter,
+              })
+            }
           />
         </GridItem>
 
